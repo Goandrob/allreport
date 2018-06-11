@@ -1,0 +1,42 @@
+<% include header %>
+
+<h1><%- title %></h1>
+
+<div class="ui two column stackable grid container">
+  <div class="column">
+    <h2>Local News</h2>
+
+    <div>
+      <% articles.forEach(function(article) { %>
+      <div class="ui card">
+        <div class="content">
+          <div class="header"><a href="<%= article.link %>" target="_blank"><%= article.headline %></a></div>
+          <div class="meta">Today</div>
+          <div class="description">
+            <p></p>
+          </div>
+        </div>
+        <div class="extra content">
+
+
+          <span class="left floated like">
+      <a href="<%= article.link %>" target="_blank"><i class="external alternate icon"></i>Read</a>
+    </span>
+          <div class="right floated author">
+            <img class="ui avatar image"
+                 src="http://ewn.co.za/site/design/img/ewn-logo.png;wa9b3335a73a3f09a3"><%= article.org %>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+
+
+  </div>
+  <div class="column">
+    <h2>World News</h2>
+
+  </div>
+</div>
+
+<% include footer %>

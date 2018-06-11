@@ -1,0 +1,12 @@
+<% include header %>
+
+<h1><%-title %></h1>
+<p>Welcome to nothing <%-title %></p>
+
+<% include footer %>
+
+<ul>
+  <% articles.forEach(function(article) { %>
+  <li><a href="<%= article.link %>" target="_blank"><%= article.headline %></a></li>
+  <% }); %>
+</ul>
