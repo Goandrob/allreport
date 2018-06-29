@@ -39,7 +39,7 @@ var arr= [
 ];
 
 
-const mine = (headlines) =>{
+module.exports.cluster = async(headlines) =>{
 
 
 
@@ -50,23 +50,31 @@ const mine = (headlines) =>{
     tagString: undefined
   };
 
-  let cleanedHeadlines = cleanHeadlines(arr);
-  let minedArr = textMine(cleanedHeadlines);
+  //let cleanedHeadlines = cleanHeadlines(arr);
+  //let minedArr = textMine(cleanedHeadlines);
   //let tags = buildTags(minedArr);
-  let tags = altBuildTags(minedArr);
+  //let tags = altBuildTags(minedArr);
 
-  let reunified = reunify(headlines, tags);
+  //let reunified = reunify(headlines, tags);
 
-  let groups = doClustering(reunified);
+  //let groups = doClustering(reunified);
+  try{
+    let tagged = await altBuildTags(headlines);
+
+    let groups = await doClustering(tagged);
+
+    return groups;
+  }
+  catch(err){
+    console.log(err);
+  }
 
 
 
-  console.log(groups);
 
 
-  //for(let i=0; i< headlines.length; i++){
-  //
-  //}
+ // console.log(groups);
+
 };
 
 const cleanHeadlines = (headlines) => {
@@ -93,7 +101,7 @@ const textMine = (cleanedHeadlines) =>{
     .trim()
     .clean()
     .removeInvalidCharacters()
-    .removeInterpunctuation()
+    .removeInterpunctuation();
     //.toLower()
     //.removeWords( tm.STOPWORDS.EN );
 
@@ -101,33 +109,37 @@ const textMine = (cleanedHeadlines) =>{
 
 };
 
-const altBuildTags = (minedArr) => {
+const altBuildTags = (headlineObjs) => {
   let tagArrs = [];
-  minedArr.forEach((minedObj) => {
+  headlineObjs.forEach((headlineObj) => {
     let tagArr = [];
 
-    let minedStr = minedObj.text;
+    let minedStr = headlineObj.headline;
 
 
-    //let topics = nlp(minedStr).topics().unique().data();
-
-    if(nlp(minedStr).has('(#Person|#Place|#Organization|#Noun)')){
-      tagArr = nlp(minedStr).match('(#Person|#Place|#Organization|#Noun)').unique().flatten().out('normal');
-    }else if(nlp(minedStr).has('#Verb')){
-      tagArr = nlp(minedStr).match('#Verb').flatten().out('normal');
-    }else{
-      tagArr = '';
+    if(nlp(minedStr).has('(#Person|#Place|#Organization)')){
+      headlineObj.tagStr = nlp(minedStr).match('(#Person|#Place|#Organization)').unique().flatten().out('normal');
     }
 
-    //nlp(minedStr).match('#Noun').trim().data().forEach(noun => tagArr.push(noun.text));
+    else if(nlp(minedStr).has('#Noun')){
+      headlineObj.tagStr = nlp(minedStr).match('#Noun').flatten().out('normal');
+    }
+
+    else if(nlp(minedStr).has('#Verb')){
+      headlineObj.tagStr = nlp(minedStr).match('#Verb').flatten().out('normal');
+    }
+
+    else{
+      headlineObj.tagStr = '';
+    }
 
 
-   // topics.forEach((topic)=> tagArr.push(topic.text));
-
-    tagArrs.push(tagArr);
+    //tagArrs.push(tagArr);
 
   });
-  return tagArrs;
+  //return tagArrs;
+
+  return headlineObjs;
 
   //console.log(nlp(minedStr).topics().data());
 
@@ -176,7 +188,6 @@ const buildTags = (minedArr) =>{
   return tagArrs;
 };
 
-//mine(["Samwu president clarifies issues around VBS bank loan, slams Media24", '\'Once you have the land, your problems only start\' - land beneficiary']);
 
 const topic = (headline) =>{
 
@@ -200,11 +211,6 @@ const topic = (headline) =>{
 
 
 };
-
-//mine(["SA govt agrees modest wage deal with state workers"]);
-
-//topic("DA files court papers to remove Arthur Fraser as head of SA's prisons");
-
 
 
 const doClustering = (headlines) =>{
@@ -285,7 +291,7 @@ const doClustering = (headlines) =>{
 
 };
 
-mine(arr);
+//mine(arr);
 
 
 

@@ -3,29 +3,36 @@
  */
 const storage = require('node-persist');
 
-const localPooledScrape = require('./local-pooled-scrape');
+const localPooledScrape = require('./scrape-pool');
 const crud = require('./crud');
-const sitesLocal = require('./sites-local');
+const sitesLocal = require('./sites/sites');
 
 
 
 
 
-module.exports.processHeadlines = async () =>{
+process_Headlines_South_Africa = async () =>{
 
-  let extractedHeadlines = await localPooledScrape.extractHeadlines();
+  //Extract local headlines non-breaking
+  let extractedHeadlines_South_Africa = await localPooledScrape.extractHeadlines_South_Africa();
 
+  //Retrieve a record of today's headlines
   let allTodayHeadlines = await getTodayHeadlines();
 
-  let status = await saveToDB(extractedHeadlines, allTodayHeadlines);
+  //Save headlines that don't already exist in the parse db
+  let status = await saveToDB(extractedHeadlines_South_Africa, allTodayHeadlines);
 
-  saveToCache();
+  //Retrieve 40 of the latest headines in the parse db
+  let headlines_South_Africa = await crud.readForCache();
+
+  //Save to local machine cache
+  saveToCache('headlines_South_Africa', headlines_South_Africa);
+};
+
+module.exports.process_Headlines_International = async() =>{
 
 
 };
-
-
-
 
 getTodayHeadlines = async ()=>{
 
@@ -38,15 +45,15 @@ getTodayHeadlines = async ()=>{
     console.log(err);
   }
 
-  for(let i = 0; i < sitesLocal.sites.length; i++){
+  for(let i = 0; i < sitesLocal.headlines_South_Africa.length; i++){
 
     let orgTodayHeadlines = {
-      org: sitesLocal.sites[i].name,
+      org: sitesLocal.headlines_South_Africa[i].name,
       headlines: []
     };
 
     for(let j= 0; j < resultsArr.length; j++){
-      if(sitesLocal.sites[i].name === resultsArr[j].get('org')){
+      if(sitesLocal.headlines_South_Africa[i].name === resultsArr[j].get('org')){
         orgTodayHeadlines.headlines.push(resultsArr[j].get('headline'));
       }
     }
@@ -96,16 +103,21 @@ const saveToDB = async(extractedHeadlines, allTodayHeadlines) => {
 
 };
 
-const saveToCache = async()=>{
+const saveToCache = async(field, item)=>{
 
-  let headlines = await crud.readForCache();
 
-  await storage.init({});
 
-  await storage.setItem('headlines', headlines);
+  await storage.init({
+    dir: './.node-persist/storage',
+    forgiveParseErrors: true
+  });
+
+  await storage.setItem('headlines_South_Africa', item);
 
 
 };
+
+process_Headlines_South_Africa();
 
 
 

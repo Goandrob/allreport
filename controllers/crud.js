@@ -105,18 +105,22 @@ module.exports.readForCache = async() =>{
 
 };
 
-module.exports.readFromCache = async() =>{
-
-  await storage.init({});
+module.exports.readFromCache = async(item) =>{
 
   try{
-    return await storage.getItem('headlines');
+    await storage.init({
+      dir: './.node-persist/storage',
+      forgiveParseErrors: true
+    });
+    return await storage.getItem(item);
   }
   catch(error){
     console.log(error);
   }
 
 };
+
+
 
 
 //

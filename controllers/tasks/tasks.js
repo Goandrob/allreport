@@ -9,5 +9,5 @@ const rule = new schedule.RecurrenceRule();
 rule.minute = [15, 45]; //every hour at 15 and 45 minutes
 
 let scrape = schedule.scheduleJob(rule, function(){
-  process.processHeadlines();
+  //process.process_Headlines_South_Africa();
 });

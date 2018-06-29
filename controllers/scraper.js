@@ -3,11 +3,10 @@
  */
 
 const axios = require("axios");
-const sitesLocal = require("./sites-local");
 
 
-module.exports.scrape = async()=> {
-  let sites = sitesLocal.sites;
+
+module.exports.scrape = async(sites)=> {
 
   let shortNameArr = sites.map(site => site.shortName);
   //let objArr = [];
@@ -20,11 +19,6 @@ module.exports.scrape = async()=> {
     for(let i=0; i < sites.length; i++){
       sites[i].data = shortNameArr[i].data;
     }
-
-    //let obj = {
-    //  ewn: shortNameArr[0].data,
-    //  news24: shortNameArr[1].data
-    //};
 
     return sites;
   }
