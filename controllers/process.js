@@ -3,50 +3,68 @@
  */
 const storage = require('node-persist');
 
-const localPooledScrape = require('./local-pooled-scrape');
+const scrapePool = require('./scrape-pool');
 const crud = require('./crud');
-const sitesLocal = require('./sites-local');
+const sitesLocal = require('./sites/sites');
 
 
+process_Headlines_South_Africa = async () =>{
 
+  //Extract local headlines non-breaking
+  let extractedHeadlines_South_Africa = await scrapePool.extractHeadlines_South_Africa();
 
+  //Retrieve a record of today's headlines
+  let allTodayHeadlines = await getTodayHeadlines("headlines_South_Africa");
 
-module.exports.processHeadlines = async () =>{
+  //Save headlines that don't already exist in the parse db
+  let status = await saveToDB(extractedHeadlines_South_Africa, allTodayHeadlines);
 
-  let extractedHeadlines = await localPooledScrape.extractHeadlines();
+  //Retrieve 40 of the latest headines in the parse db
+  let headlines_South_Africa = await crud.readForCache('headlines_South_Africa');
 
-  let allTodayHeadlines = await getTodayHeadlines();
+  //Save to local machine cache
+  saveToCache('headlines_South_Africa', headlines_South_Africa);
+};
 
-  let status = await saveToDB(extractedHeadlines, allTodayHeadlines);
+process_Headlines_World = async() =>{
 
-  saveToCache();
+  //Extract local headlines non-breaking
+  let extractedHeadlines_World = await scrapePool.extractHeadlines_World();
 
+  //Retrieve a record of today's headlines
+ // let allTodayHeadlines = await getTodayHeadlines("headlines_World");
+
+  //Save headlines that don't already exist in the parse db
+ // let status = await saveToDB(extractedHeadlines_World, allTodayHeadlines);
+
+  //Retrieve 40 of the latest headines in the parse db
+ // let headlines_World = await crud.readForCache('headlines_World');
+
+  //Save to local machine cache
+  //saveToCache('headlines_World', headlines_World);
 
 };
 
-
-
-
-getTodayHeadlines = async ()=>{
+getTodayHeadlines = async (headlines_type)=>{
 
   let allTodayHeadlines = [];
   let resultsArr = [];
 
   try{
-    resultsArr = await crud.read();
+    resultsArr = await crud.read(headlines_type);
   }catch(err){
     console.log(err);
   }
 
-  for(let i = 0; i < sitesLocal.sites.length; i++){
+  for(let i = 0; i < sitesLocal[headlines_type].length; i++){
 
     let orgTodayHeadlines = {
-      org: sitesLocal.sites[i].name,
+      org: sitesLocal[headlines_type][i].name,
       headlines: []
     };
 
     for(let j= 0; j < resultsArr.length; j++){
-      if(sitesLocal.sites[i].name === resultsArr[j].get('org')){
+      if(sitesLocal[headlines_type][i].name === resultsArr[j].get('org')){
         orgTodayHeadlines.headlines.push(resultsArr[j].get('headline'));
       }
     }
@@ -96,16 +114,21 @@ const saveToDB = async(extractedHeadlines, allTodayHeadlines) => {
 
 };
 
-const saveToCache = async()=>{
+const saveToCache = async(field, item)=>{
 
-  let headlines = await crud.readForCache();
 
-  await storage.init({});
 
-  await storage.setItem('headlines', headlines);
+  await storage.init({
+    dir: './.node-persist/storage',
+    forgiveParseErrors: true
+  });
+
+  await storage.setItem('headlines_South_Africa', item);
 
 
 };
+
+process_Headlines_World();
 
 
 

@@ -4,6 +4,8 @@ const router = express.Router();
 
 const crud = require('../controllers/crud');
 
+const readFromCache = require('../controllers/read-from-cache');
+
 
 
 //const timeAgo = (articles) => {
@@ -21,14 +23,24 @@ const crud = require('../controllers/crud');
 /* GET home page. */
 router.get('/', (req, res) => {
 
-  crud.readFromCache()
-    .then((articles)=>{
-    if(articles){
-        res.render('index', {
-          title: 'Express',
-          articles: articles
-        });
-      }
+  //crud.readFromCache()
+  //  .then((articles)=>{
+  //  if(articles){
+  //      res.render('index', {
+  //        title: 'Express',
+  //        articles: articles
+  //      });
+  //    }
+  //});
+
+  readFromCache.group()
+  .then((clusters)=>{
+    if(clusters){
+      res.render('index', {
+        title: 'News',
+        clusters: clusters
+      })
+    }
   });
 
 

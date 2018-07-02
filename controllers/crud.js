@@ -59,7 +59,7 @@ module.exports.create = async(items) => {
 
 
 
-module.exports.read = () => {
+module.exports.read = (headlines_type) => {
 
   let headlineQuery = new Parse.Query(Headline);
 
@@ -74,6 +74,7 @@ module.exports.read = () => {
   finish.add(1, 'day');
 
   //Articles from today
+  headlineQuery.equalTo('type', headlines_type);
   headlineQuery.greaterThanOrEqualTo('createdAt', start.toDate());
   headlineQuery.lessThan('createdAt', finish.toDate());
   headlineQuery.limit(500);
@@ -83,7 +84,7 @@ module.exports.read = () => {
 };
 
 
-module.exports.readForCache = async() =>{
+module.exports.readForCache = async(headlines_type) =>{
 
 
   var d = new Date();
@@ -96,6 +97,7 @@ module.exports.readForCache = async() =>{
   finish.add(1, 'day');
 
   let headlineCacheQuery = new Parse.Query(Headline);
+  headlineCacheQuery.equalTo('type', headlines_type);
   headlineCacheQuery.greaterThanOrEqualTo('createdAt', start.toDate());
   headlineCacheQuery.lessThan('createdAt', finish.toDate());
   headlineCacheQuery.descending("createdAt");
@@ -105,18 +107,22 @@ module.exports.readForCache = async() =>{
 
 };
 
-module.exports.readFromCache = async() =>{
-
-  await storage.init({});
+module.exports.readFromCache = async(item) =>{
 
   try{
-    return await storage.getItem('headlines');
+    await storage.init({
+      dir: './.node-persist/storage',
+      forgiveParseErrors: true
+    });
+    return await storage.getItem(item);
   }
   catch(error){
     console.log(error);
   }
 
 };
+
+
 
 
 //

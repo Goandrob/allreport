@@ -1,7 +1,7 @@
 /**
  * Created by ROB on 2018/06/02.
  */
-module.exports.sites = [
+module.exports.headlines_South_Africa = [
   {
     name: "EWN",
     shortName: 'ewn',
@@ -13,3 +13,13 @@ module.exports.sites = [
     url: "https://www.news24.com/SouthAfrica"
   }
 ];
+
+module.exports.headlines_World = [
+  {
+    name: "BBC News",
+    shortName: 'bbc',
+    url: "http://feeds.bbci.co.uk/news/world/rss.xml"
+  }
+
+];
+
