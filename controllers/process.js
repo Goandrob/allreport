@@ -4,6 +4,7 @@
 const storage = require('node-persist');
 
 const scrapePool = require('./scrape-pool');
+
 const crud = require('./crud');
 const sitesLocal = require('./sites/sites');
 
@@ -16,6 +17,7 @@ process_Headlines_South_Africa = async () =>{
   //Retrieve a record of today's headlines
   let allTodayHeadlines = await getTodayHeadlines("headlines_South_Africa");
 
+
   //Save headlines that don't already exist in the parse db
   let status = await saveToDB(extractedHeadlines_South_Africa, allTodayHeadlines);
 
@@ -26,22 +28,19 @@ process_Headlines_South_Africa = async () =>{
   saveToCache('headlines_South_Africa', headlines_South_Africa);
 };
 
-process_Headlines_World = async() =>{
+process_Headlines_World = async() => {
 
   //Extract local headlines non-breaking
   let extractedHeadlines_World = await scrapePool.extractHeadlines_World();
 
   //Retrieve a record of today's headlines
- // let allTodayHeadlines = await getTodayHeadlines("headlines_World");
+  // let allTodayHeadlines = await getTodayHeadlines("headlines_World");
 
   //Save headlines that don't already exist in the parse db
- // let status = await saveToDB(extractedHeadlines_World, allTodayHeadlines);
+  // let status = await saveToDB(extractedHeadlines_World, allTodayHeadlines);
 
   //Retrieve 40 of the latest headines in the parse db
- // let headlines_World = await crud.readForCache('headlines_World');
-
-  //Save to local machine cache
-  //saveToCache('headlines_World', headlines_World);
+  // let headlines_World = await crud.readForCache('headlines_World');
 
 };
 
@@ -64,7 +63,9 @@ getTodayHeadlines = async (headlines_type)=>{
     };
 
     for(let j= 0; j < resultsArr.length; j++){
+
       if(sitesLocal[headlines_type][i].name === resultsArr[j].get('org')){
+
         orgTodayHeadlines.headlines.push(resultsArr[j].get('headline'));
       }
     }
@@ -129,6 +130,7 @@ const saveToCache = async(field, item)=>{
 };
 
 process_Headlines_World();
+
 
 
 

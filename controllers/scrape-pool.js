@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const scraper = require('./scraper');
+=======
+const scraper_South_Africa = require('./scraper');
+>>>>>>> 2959e421524b2a97b582f637000c58706a3b41b9
 const extractSelectors = require('./extract-selectors');
 const selectorList = require('./selector-list');
 const allSites = require("./sites/sites");
@@ -6,6 +10,7 @@ const allSites = require("./sites/sites");
 module.exports.extractHeadlines_South_Africa = async ()=>{
 
   let sites = await scraper.scrape(allSites.headlines_South_Africa);
+
   let siteHeadlines = [];
 
   for(let i = 0; i< sites.length; i++){
@@ -33,6 +38,7 @@ module.exports.extractHeadlines_South_Africa = async ()=>{
 
 
 };
+
 
 module.exports.extractHeadlines_World = async ()=>{
 
@@ -65,7 +71,6 @@ module.exports.extractHeadlines_World = async ()=>{
 
 
 };
-
 
 
 

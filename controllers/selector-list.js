@@ -9,5 +9,4 @@ module.exports.selectors_Headlines_South_Africa = {
 
 module.exports.selectors_Headlines_World = {
   bbc: "#item a.item",
-
 };

@@ -14,7 +14,11 @@ module.exports.headlines_South_Africa = [
   }
 ];
 
+<<<<<<< HEAD:controllers/sites/sites.js
 module.exports.headlines_World = [
+=======
+module.exports.headlines_International = [
+>>>>>>> 2959e421524b2a97b582f637000c58706a3b41b9:controllers/sites/sites.js
   {
     name: "BBC News",
     shortName: 'bbc',
