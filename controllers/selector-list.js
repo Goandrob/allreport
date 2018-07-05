@@ -25,3 +25,13 @@ module.exports.selectors_Headlines_World = {
     attr: undefined
   },
 };
+
+
+module.exports.selectors_FactCheck_South_Africa = {
+  africacheck: {
+    root: ".article-content h2",
+    title: undefined,
+    link: "a",
+    attr: "href"
+  },
+};

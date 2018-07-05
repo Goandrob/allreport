@@ -50,7 +50,28 @@ module.exports.process_Headlines_World = async() => {
 
 };
 
-getTodayHeadlines = async (headlines_type)=>{
+module.exports.process_FactCheck_South_Africa = async() => {
+
+ // const process_FactCheck_South_Africa = async() => {
+
+  //Extract local headlines non-breaking
+  let extractedFactCheck_South_Africa = await scrapePool.extractFactCheck_South_Africa();
+
+  //Retrieve a record of today's headlines
+  let allTodayHeadlines = await getTodayHeadlines("factCheck_South_Africa");
+
+  //Save headlines that don't already exist in the parse db
+  let status = await saveToDB(extractedFactCheck_South_Africa, allTodayHeadlines);
+
+  //Retrieve 40 of the latest headines in the parse db
+  let factCheck_South_Africa = await crud.readForCache("factCheck_South_Africa");
+
+  //Save to local machine cache
+  saveToCache("factCheck_South_Africa", factCheck_South_Africa);
+
+};
+
+const getTodayHeadlines = async (headlines_type)=>{
 
   let allTodayHeadlines = [];
   let resultsArr = [];
