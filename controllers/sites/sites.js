@@ -24,3 +24,14 @@ module.exports.headlines_World = [
 
 ];
 
+module.exports.factCheck_South_Africa = [
+  
+   {
+    name: "Africa Check",
+    shortName: 'africacheck',
+    url: "https://africacheck.org/geofocus/south-africa/"
+  }
+  
+  
+  ];
+
