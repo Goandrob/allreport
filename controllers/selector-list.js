@@ -24,6 +24,12 @@ module.exports.selectors_Headlines_World = {
     link: "link",
     attr: undefined
   },
+  fox: {
+    root: "item",
+    title: "title",
+    link: "link",
+    attr: undefined
+  }
 };
 
 

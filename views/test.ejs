@@ -112,3 +112,36 @@
 
 
 <!--end clustering-->
+
+<div class="column three wide">
+  <div class="ui one cards">
+    <% headlines_South_Africa.forEach(function(article) { %>
+
+
+
+    <div class="ui blue card">
+      <div class="top aligned content">
+        <div class="ui items">
+          <div class="item">
+            <div class="ui mini rounded image">
+              <img src="http://www.theroomlink.co.za/uploads/press/news24_logo.png">
+            </div>
+            <div class="top aligned content">
+              <a class="ui medium header" href="<%= article.link %>" target="_blank"><%= article.headline %></a>
+
+              <div class="meta"><span class="author"><%= article.org %></span>
+                <span class="right floated"><%= article.timeAgo %></span></div>
+              <div class="description">
+                <p></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <% }); %>
+
+  </div>
+</div>

@@ -34,11 +34,13 @@ router.get('/', (req, res) => {
   //});
 
   readFromCache.group()
-  .then((clusters)=>{
-    if(clusters){
+  .then((contentObj)=>{
+    if(contentObj){
       res.render('index', {
         title: 'News',
-        clusters: clusters
+        headlines_South_Africa: contentObj.headlines_South_Africa,
+        headlines_World: contentObj.headlines_World,
+        factCheck_South_Africa: contentObj.factCheck_South_Africa
       })
     }
   });

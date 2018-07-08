@@ -57,6 +57,16 @@ module.exports.create = async(items) => {
 
 };
 
+module.exports.findExistingEntries = (items, type) => {
+  let queryItems = items.map((item)=> item.headline);
+
+  let headlineQuery = new Parse.Query(Headline);
+  headlineQuery.equalTo("type", type);
+  headlineQuery.containedIn("headline",queryItems);
+
+  return headlineQuery.find();
+};
+
 
 
 module.exports.read = (headlines_type) => {
@@ -98,8 +108,8 @@ module.exports.readForCache = async(headlines_type) =>{
 
   let headlineCacheQuery = new Parse.Query(Headline);
   headlineCacheQuery.equalTo('type', headlines_type);
-  headlineCacheQuery.greaterThanOrEqualTo('createdAt', start.toDate());
-  headlineCacheQuery.lessThan('createdAt', finish.toDate());
+  //headlineCacheQuery.greaterThanOrEqualTo('createdAt', start.toDate());
+  //headlineCacheQuery.lessThan('createdAt', finish.toDate());
   headlineCacheQuery.descending("createdAt");
   headlineCacheQuery.limit(40);
 

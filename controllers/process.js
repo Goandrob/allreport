@@ -17,10 +17,10 @@ module.exports.process_Headlines_South_Africa = async () =>{
   let extractedHeadlines_South_Africa = await scrapePool.extractHeadlines_South_Africa();
 
   //Retrieve a record of today's headlines
-  let allTodayHeadlines = await getTodayHeadlines("headlines_South_Africa");
+  let allExistingItems = await getExistingItems(extractedHeadlines_South_Africa,"headlines_South_Africa");
 
   //Save headlines that don't already exist in the parse db
-  let status = await saveToDB(extractedHeadlines_South_Africa, allTodayHeadlines);
+  let status = await saveToDB(extractedHeadlines_South_Africa, allExistingItems);
 
   //Retrieve 40 of the latest headines in the parse db
   let headlines_South_Africa = await crud.readForCache('headlines_South_Africa');
@@ -37,10 +37,10 @@ module.exports.process_Headlines_World = async() => {
   let extractedHeadlines_World = await scrapePool.extractHeadlines_World();
 
   //Retrieve a record of today's headlines
-  let allTodayHeadlines = await getTodayHeadlines("headlines_World");
+  let allExistingItems = await getExistingItems(extractedHeadlines_World,"headlines_World");
 
   //Save headlines that don't already exist in the parse db
-  let status = await saveToDB(extractedHeadlines_World, allTodayHeadlines);
+  let status = await saveToDB(extractedHeadlines_World, allExistingItems);
 
   //Retrieve 40 of the latest headines in the parse db
   let headlines_World = await crud.readForCache('headlines_World');
@@ -52,39 +52,40 @@ module.exports.process_Headlines_World = async() => {
 
 module.exports.process_FactCheck_South_Africa = async() => {
 
- // const process_FactCheck_South_Africa = async() => {
+  //const process_FactCheck_South_Africa = async() => {
 
   //Extract local headlines non-breaking
   let extractedFactCheck_South_Africa = await scrapePool.extractFactCheck_South_Africa();
 
   //Retrieve a record of today's headlines
-  let allTodayHeadlines = await getTodayHeadlines("factCheck_South_Africa");
+  let allExistingItems = await getExistingItems(extractedFactCheck_South_Africa,"factCheck_South_Africa");
 
   //Save headlines that don't already exist in the parse db
-  let status = await saveToDB(extractedFactCheck_South_Africa, allTodayHeadlines);
+  let status = await saveToDB(extractedFactCheck_South_Africa, allExistingItems);
 
   //Retrieve 40 of the latest headines in the parse db
   let factCheck_South_Africa = await crud.readForCache("factCheck_South_Africa");
 
   //Save to local machine cache
-  saveToCache("factCheck_South_Africa", factCheck_South_Africa);
-
+  if(factCheck_South_Africa.length){
+    saveToCache("factCheck_South_Africa", factCheck_South_Africa);
+  }
 };
 
-const getTodayHeadlines = async (headlines_type)=>{
+const getExistingItems = async (extracted, headlines_type)=>{
 
-  let allTodayHeadlines = [];
+  let allExistingItems = [];
   let resultsArr = [];
 
   try{
-    resultsArr = await crud.read(headlines_type);
+    resultsArr = await crud.findExistingEntries(extracted, headlines_type);
   }catch(err){
     console.log(err);
   }
 
   for(let i = 0; i < sitesLocal[headlines_type].length; i++){
 
-    let orgTodayHeadlines = {
+    let orgExistingItems = {
       org: sitesLocal[headlines_type][i].name,
       headlines: []
     };
@@ -93,14 +94,14 @@ const getTodayHeadlines = async (headlines_type)=>{
 
       if(sitesLocal[headlines_type][i].name === resultsArr[j].get('org')){
 
-        orgTodayHeadlines.headlines.push(resultsArr[j].get('headline'));
+        orgExistingItems.headlines.push(resultsArr[j].get('headline'));
       }
     }
 
-    allTodayHeadlines.push(orgTodayHeadlines);
+    allExistingItems.push(orgExistingItems);
   }
 
-  return allTodayHeadlines;
+  return allExistingItems;
 
 };
 
@@ -151,10 +152,11 @@ const saveToCache = async(field, item)=>{
     forgiveParseErrors: true
   });
 
-  await storage.setItem('headlines_South_Africa', item);
+  await storage.setItem(field, item);
 
 
 };
+
 
 
 
