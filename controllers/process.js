@@ -5,6 +5,8 @@ const storage = require('node-persist');
 
 const scrapePool = require('./scrape-pool');
 
+const adjuster = require('./adjuster/adjuster');
+
 const crud = require('./crud');
 const sitesLocal = require('./sites/sites');
 
@@ -72,6 +74,31 @@ module.exports.process_FactCheck_South_Africa = async() => {
   }
 };
 
+//module.exports.process_Opinions_South_Africa = async() => {
+
+  const process_Opinions_South_Africa = async() => {
+
+  //Extract local headlines non-breaking
+  let extractedOpinions_South_Africa = await scrapePool.extractOpinions_South_Africa();
+  extractedOpinions_South_Africa = await adjuster.adjust_Opinions_South_Africa(extractedOpinions_South_Africa);
+  console.log(extractedOpinions_South_Africa);
+
+  //Retrieve a record of today's headlines
+  //let allExistingItems = await getExistingItems(extractedOpinions_South_Africa,"opinions_South_Africa");
+
+  //Save headlines that don't already exist in the parse db
+  //let status = await saveToDB(extractedOpinions_South_Africa, allExistingItems);
+
+  //Retrieve 40 of the latest headines in the parse db
+  //let opinions_South_Africa = await crud.readForCache("opinions_South_Africa");
+
+  //Save to local machine cache
+  //if(opinions_South_Africa.length){
+    //saveToCache("opinions_South_Africa", opinions_South_Africa);
+  //}
+};
+
+
 const getExistingItems = async (extracted, headlines_type)=>{
 
   let allExistingItems = [];
@@ -110,6 +137,8 @@ const saveToDB = async(extractedHeadlines, allTodayHeadlines) => {
 
   let toBeSaved = [];
 
+  let status;
+
   let i = 0;
 
   if(!allTodayHeadlines.length){
@@ -135,12 +164,14 @@ const saveToDB = async(extractedHeadlines, allTodayHeadlines) => {
       i++;
     }
   }
-  let results =  await crud.create(toBeSaved);
-  let status = results.map(result => result.id);
+  if(toBeSaved.length){
+    let results =  await crud.create(toBeSaved);
+    status = results.map(result => result.id);
+  }else{
+    status = "Nothing to save";
+  }
 
   return status;
-
-
 };
 
 const saveToCache = async(field, item)=>{
@@ -156,6 +187,8 @@ const saveToCache = async(field, item)=>{
 
 
 };
+
+process_Opinions_South_Africa()
 
 
 

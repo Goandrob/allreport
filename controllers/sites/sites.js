@@ -40,3 +40,18 @@ module.exports.factCheck_South_Africa = [
 
   ];
 
+module.exports.opinions_South_Africa = [
+
+  {
+    name: "FMF",
+    shortName: 'fmf',
+    url: "http://www.freemarketfoundation.com/Articles/All"
+  },
+  {
+    name: "Politics Web",
+    shortName: "politicsweb",
+    url: "http://www.politicsweb.co.za/comment"
+  }
+
+];
+

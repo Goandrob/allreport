@@ -14,6 +14,7 @@ module.exports.extract = (selectorObj, data) =>{
   let selectorTitle = selectorObj["title"];
   let selectorLink = selectorObj["link"];
   let selectorAttr = selectorObj["attr"];
+  let selectorAuthor = selectorObj["author"];
 
   $(selectorRoot).each(function(){
 
@@ -24,6 +25,7 @@ module.exports.extract = (selectorObj, data) =>{
       if(selectorTitle){
         title = $(this).children(selectorTitle).text();
       }else{
+        //console.log($(this).children('div').length);
         title = $(this).text();
       }
 
@@ -37,6 +39,11 @@ module.exports.extract = (selectorObj, data) =>{
         title: title,
         link: link
       };
+
+      if(selectorAuthor && selectorAuthor !== "next"){
+        let author = $(this).children(selectorAuthor).text();
+        headline.author = author;
+      }
 
       headlines.push(headline);
       count++;

@@ -41,3 +41,21 @@ module.exports.selectors_FactCheck_South_Africa = {
     attr: "href"
   },
 };
+
+module.exports.selectors_Opinions_South_Africa = {
+  fmf: {
+    root: "h3.article-title",
+    title: undefined,
+    link: "a",
+    attr: "href",
+    author: undefined,
+  },
+  politicsweb: {
+    root: ".teaser-container",
+    title: " div:first-child",
+    link: " div:first-child a",
+    attr: "href",
+    author: "div:nth-child(2)",
+  },
+
+};

@@ -100,5 +100,38 @@ module.exports.extractFactCheck_South_Africa = async ()=>{
 
 };
 
+module.exports.extractOpinions_South_Africa = async ()=>{
+
+  let sites = await scraper.scrape(allSites.opinions_South_Africa);
+  //console.log(sites);
+  let siteHeadlines = [];
+
+  for(let i = 0; i< sites.length; i++){
+    let name = sites[i].name;
+    let shortName = sites[i].shortName;
+
+    let selectorObj = selectorList.selectors_Opinions_South_Africa[shortName];
+
+    let regularHeadlines = await extractSelectors.extract(selectorObj ,sites[i]['data']);
+
+    regularHeadlines.forEach((headline)=>{
+
+      siteHeadlines.push({
+        org: name,
+        headline: headline.title,
+        link: headline.link,
+        author: headline.author,
+        type: "opinions_South_Africa",
+      })
+
+    })
+
+  }
+
+  return siteHeadlines;
+
+
+};
+
 
 
