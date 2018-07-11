@@ -4,9 +4,9 @@
 var cheerio = require("cheerio");
 
 
-module.exports.extract = (selectorObj, data) =>{
+module.exports.extract = (selectorObj, data) => {
 
-  let $ = cheerio.load(data, { xmlMode: true });
+  let $ = cheerio.load(data, {xmlMode: true});
   let headlines = [];
   let count = 0;
 
@@ -16,22 +16,23 @@ module.exports.extract = (selectorObj, data) =>{
   let selectorAttr = selectorObj["attr"];
   let selectorAuthor = selectorObj["author"];
 
-  $(selectorRoot).each(function(){
+  $(selectorRoot).each(function () {
 
-    if(count < 10){
+    if (count < 10) {
       let title;
       let link;
+      let author;
 
-      if(selectorTitle){
+      if (selectorTitle) {
         title = $(this).children(selectorTitle).text();
-      }else{
+      } else {
         //console.log($(this).children('div').length);
         title = $(this).text();
       }
 
-      if(selectorAttr){
+      if (selectorAttr) {
         link = $(this).children(selectorLink).attr(selectorAttr);
-      }else{
+      } else {
         link = $(this).children(selectorLink).text();
       }
 
@@ -40,8 +41,17 @@ module.exports.extract = (selectorObj, data) =>{
         link: link
       };
 
-      if(selectorAuthor && selectorAuthor !== "next"){
-        let author = $(this).children(selectorAuthor).text();
+      if (selectorAuthor) {
+        if (selectorAuthor.childSelector) {
+          author = $(this).children(selectorAuthor.childSelector).text();
+        } else {
+          switch (selectorAuthor.relationMethod) {
+            case "next":
+              author = $(this).next().find(selectorAuthor.selector).text();
+              break;
+          }
+
+        }
         headline.author = author;
       }
 

@@ -48,14 +48,33 @@ module.exports.selectors_Opinions_South_Africa = {
     title: undefined,
     link: "a",
     attr: "href",
-    author: undefined,
+    author: {
+      childSelector: undefined,
+      relationMethod: "next",
+      selector: "div:nth-child(2) a"
+    },
   },
   politicsweb: {
     root: ".teaser-container",
     title: " div:first-child",
     link: " div:first-child a",
     attr: "href",
-    author: "div:nth-child(2)",
+    author:{
+      childSelector: "div:nth-child(2)"
+    },
   },
 
+};
+
+
+module.exports.selectors_Opinions_World = {
+  dailywire: {
+    root: "item",
+    title: "title",
+    link: "link",
+    attr: undefined,
+    author:{
+      childSelector: "dc\\:creator"
+    },
+  },
 };

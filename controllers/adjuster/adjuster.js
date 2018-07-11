@@ -13,6 +13,10 @@ module.exports.adjust_Opinions_South_Africa = (items)=> {
     switch (items[i].org) {
       case "FMF":
         items[i].link = "http://www.freemarketfoundation.com" + items[i].link;
+        if(items[i].author === "" || items[i].author === "FMF Media Release"){
+          items.splice(i, 1);
+          i --;
+        }
         break;
       case "Politics Web":
         items[i].link = "http://www.politicsweb.co.za" + items[i].link;
@@ -27,5 +31,10 @@ module.exports.adjust_Opinions_South_Africa = (items)=> {
   }
 
   return items;
+
+};
+
+module.exports.adjust_Opinions_South_Africa = (items)=> {
+
 
 };

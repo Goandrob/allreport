@@ -55,3 +55,10 @@ module.exports.opinions_South_Africa = [
 
 ];
 
+module.exports.opinions_World = [
+  {
+    name: "Daily Wire",
+    shortName: 'dailywire',
+    url: "https://www.dailywire.com/rss.xml"
+  },
+];

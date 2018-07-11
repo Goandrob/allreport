@@ -11,15 +11,15 @@ const crud = require('./crud');
 const sitesLocal = require('./sites/sites');
 
 
-module.exports.process_Headlines_South_Africa = async () =>{
+module.exports.process_Headlines_South_Africa = async () => {
 
- // const process_Headlines_South_Africa = async () =>{
+  // const process_Headlines_South_Africa = async () =>{
 
   //Extract local headlines non-breaking
   let extractedHeadlines_South_Africa = await scrapePool.extractHeadlines_South_Africa();
 
   //Retrieve a record of today's headlines
-  let allExistingItems = await getExistingItems(extractedHeadlines_South_Africa,"headlines_South_Africa");
+  let allExistingItems = await getExistingItems(extractedHeadlines_South_Africa, "headlines_South_Africa");
 
   //Save headlines that don't already exist in the parse db
   let status = await saveToDB(extractedHeadlines_South_Africa, allExistingItems);
@@ -33,13 +33,13 @@ module.exports.process_Headlines_South_Africa = async () =>{
 
 module.exports.process_Headlines_World = async() => {
 
- // const process_Headlines_World = async() => {
+  // const process_Headlines_World = async() => {
 
   //Extract local headlines non-breaking
   let extractedHeadlines_World = await scrapePool.extractHeadlines_World();
 
   //Retrieve a record of today's headlines
-  let allExistingItems = await getExistingItems(extractedHeadlines_World,"headlines_World");
+  let allExistingItems = await getExistingItems(extractedHeadlines_World, "headlines_World");
 
   //Save headlines that don't already exist in the parse db
   let status = await saveToDB(extractedHeadlines_World, allExistingItems);
@@ -60,7 +60,7 @@ module.exports.process_FactCheck_South_Africa = async() => {
   let extractedFactCheck_South_Africa = await scrapePool.extractFactCheck_South_Africa();
 
   //Retrieve a record of today's headlines
-  let allExistingItems = await getExistingItems(extractedFactCheck_South_Africa,"factCheck_South_Africa");
+  let allExistingItems = await getExistingItems(extractedFactCheck_South_Africa, "factCheck_South_Africa");
 
   //Save headlines that don't already exist in the parse db
   let status = await saveToDB(extractedFactCheck_South_Africa, allExistingItems);
@@ -69,14 +69,14 @@ module.exports.process_FactCheck_South_Africa = async() => {
   let factCheck_South_Africa = await crud.readForCache("factCheck_South_Africa");
 
   //Save to local machine cache
-  if(factCheck_South_Africa.length){
+  if (factCheck_South_Africa.length) {
     saveToCache("factCheck_South_Africa", factCheck_South_Africa);
   }
 };
 
 //module.exports.process_Opinions_South_Africa = async() => {
 
-  const process_Opinions_South_Africa = async() => {
+const process_Opinions_South_Africa = async() => {
 
   //Extract local headlines non-breaking
   let extractedOpinions_South_Africa = await scrapePool.extractOpinions_South_Africa();
@@ -94,32 +94,55 @@ module.exports.process_FactCheck_South_Africa = async() => {
 
   //Save to local machine cache
   //if(opinions_South_Africa.length){
-    //saveToCache("opinions_South_Africa", opinions_South_Africa);
+  //saveToCache("opinions_South_Africa", opinions_South_Africa);
   //}
 };
 
+//module.exports.process_Opinions_World = async() => {
 
-const getExistingItems = async (extracted, headlines_type)=>{
+const process_Opinions_World = async() => {
+
+  //Extract local headlines non-breaking
+  let extractedOpinions_World = await scrapePool.extractOpinions_World();
+  //extractedOpinions_World = await adjuster.adjust_Opinions_World(extractedOpinions_World);
+  console.log(extractedOpinions_World);
+
+  //Retrieve a record of today's headlines
+ // let allExistingItems = await getExistingItems(extractedOpinions_World, "opinions_World");
+
+  //Save headlines that don't already exist in the parse db
+  //let status = await saveToDB(extractedOpinions_World, allExistingItems);
+
+  //Retrieve 40 of the latest headines in the parse db
+  //et opinions_World = await crud.readForCache("opinions_World");
+
+  //Save to local machine cache
+ // if (opinions_World.length) {
+   // saveToCache("opinions_World", opinions_World);
+  //}
+};
+
+const getExistingItems = async (extracted, headlines_type)=> {
 
   let allExistingItems = [];
   let resultsArr = [];
 
-  try{
+  try {
     resultsArr = await crud.findExistingEntries(extracted, headlines_type);
-  }catch(err){
+  } catch (err) {
     console.log(err);
   }
 
-  for(let i = 0; i < sitesLocal[headlines_type].length; i++){
+  for (let i = 0; i < sitesLocal[headlines_type].length; i++) {
 
     let orgExistingItems = {
       org: sitesLocal[headlines_type][i].name,
       headlines: []
     };
 
-    for(let j= 0; j < resultsArr.length; j++){
+    for (let j = 0; j < resultsArr.length; j++) {
 
-      if(sitesLocal[headlines_type][i].name === resultsArr[j].get('org')){
+      if (sitesLocal[headlines_type][i].name === resultsArr[j].get('org')) {
 
         orgExistingItems.headlines.push(resultsArr[j].get('headline'));
       }
@@ -141,15 +164,15 @@ const saveToDB = async(extractedHeadlines, allTodayHeadlines) => {
 
   let i = 0;
 
-  if(!allTodayHeadlines.length){
+  if (!allTodayHeadlines.length) {
     toBeSaved = extractedHeadlines;
-  }else{
-    while (extractedHeadlines[i]){
+  } else {
+    while (extractedHeadlines[i]) {
 
       let newHeadline = extractedHeadlines[i].headline;
-      for(let j = 0; j< allTodayHeadlines.length; j++){
+      for (let j = 0; j < allTodayHeadlines.length; j++) {
 
-        if(extractedHeadlines[i].org === allTodayHeadlines[j].org ){
+        if (extractedHeadlines[i].org === allTodayHeadlines[j].org) {
 
 
           existingHeadlines = allTodayHeadlines[j].headlines;
@@ -157,25 +180,24 @@ const saveToDB = async(extractedHeadlines, allTodayHeadlines) => {
         }
       }
 
-      if(existingHeadlines.indexOf(newHeadline) === -1){
+      if (existingHeadlines.indexOf(newHeadline) === -1) {
         toBeSaved.push(extractedHeadlines[i]);
       }
 
       i++;
     }
   }
-  if(toBeSaved.length){
-    let results =  await crud.create(toBeSaved);
+  if (toBeSaved.length) {
+    let results = await crud.create(toBeSaved);
     status = results.map(result => result.id);
-  }else{
+  } else {
     status = "Nothing to save";
   }
 
   return status;
 };
 
-const saveToCache = async(field, item)=>{
-
+const saveToCache = async(field, item)=> {
 
 
   await storage.init({
@@ -188,7 +210,7 @@ const saveToCache = async(field, item)=>{
 
 };
 
-process_Opinions_South_Africa()
+process_Opinions_World()
 
 
 
