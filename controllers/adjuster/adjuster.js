@@ -2,8 +2,28 @@
  * Created by ROB on 2018/07/10.
  */
 
-module.exports.adjust_Headlines_South_Africa = ()=> {
+module.exports.adjust_Headlines_South_Africa = (items)=> {
+  for (let i = 0; i < items.length; i++) {
+    switch (items[i].org) {
+      case "EWN":
+        if(items[i].headline.includes("[")){
+          items.splice(i, 1);
+          i --;
+        }
+        break;
+      case "News24":
+        if(items[i].headline.includes("ICYMI")
+          || items[i].headline.includes("WATCH:")
+          || items[i].headline.includes("GALLERY:")){
+          items.splice(i, 1);
+          i --;
+        }
+        break;
+    }
 
+  }
+
+  return items;
 
 };
 
@@ -34,7 +54,20 @@ module.exports.adjust_Opinions_South_Africa = (items)=> {
 
 };
 
-module.exports.adjust_Opinions_South_Africa = (items)=> {
+module.exports.adjust_Opinions_World = (items)=> {
 
+  for (let i = 0; i < items.length; i++) {
+    switch (items[i].org) {
+      case "Daily Wire":
+        if(items[i].author !== "Ben Shapiro" || items[i].headline.includes('WATCH:')){
+          items.splice(i, 1);
+          i --;
+        }
+        break;
+    }
+
+  }
+
+  return items;
 
 };

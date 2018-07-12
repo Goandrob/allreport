@@ -26,10 +26,26 @@ module.exports.group = async() =>{
     let cached_FactCheck_South_Africa = await crud.readFromCache('factCheck_South_Africa');
     let stamped_FactCheck_South_Africa = await timeStamp.addTimeStamp(cached_FactCheck_South_Africa);
 
+    let cached_Opinions_South_Africa = await crud.readFromCache('opinions_South_Africa');
+    let stamped_Opinions_South_Africa = await timeStamp.addTimeStamp(cached_Opinions_South_Africa);
+
+    let cached_Opinions_World = await crud.readFromCache('opinions_World');
+    let stamped_Opinions_World = await timeStamp.addTimeStamp(cached_Opinions_World);
+
+    let opinions = stamped_Opinions_South_Africa.concat(stamped_Opinions_World);
+
+    opinions = opinions.sort(function(a, b) {
+      return a.createdAt- b.createdAt;
+    });
+
+
+
+
     let contentObj = {
       headlines_South_Africa: stamped_Headlines_South_Africa,
       headlines_World: stamped_Headlines_World,
-      factCheck_South_Africa: stamped_FactCheck_South_Africa
+      factCheck_South_Africa: stamped_FactCheck_South_Africa,
+      opinions: opinions
     };
 
     return contentObj;

@@ -197,32 +197,21 @@
   <div class="column three wide">
     <div class="ui segment">
       <div class="ui medium header">Opinion & Commentary</div>
-      <div class="ui fluid two item menu">
-        <a class="item active">
-          Local
-        </a>
-        <a class="item">
-          International
-        </a>
-      </div>
       <div class="ui divided items">
+        <% for(var i=0; i < 4; i++) { %>
+
         <div class="item">
 
           <div class="content">
-            <a class="ui tiny header">Article</a>
+            <a class="ui tiny header" href="<%= opinions[i].link %>" target="_blank"><%= opinions[i].headline %></a>
 
             <div class="meta">
-              <span class="author">By <a>author</a></span>
+              <span class="author"><%= opinions[i].org %></span>
             </div>
           </div>
         </div>
-        <div class="item">
 
-          <div class="middle aligned content">
-            Content B
-          </div>
-        </div>
-
+        <% } %>
       </div>
     </div>
     <div class="ui segment">

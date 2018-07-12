@@ -12,4 +12,6 @@ let scrape = schedule.scheduleJob(rule_Headlines, function(){
   process.process_Headlines_South_Africa();
   process.process_Headlines_World();
   process.process_FactCheck_South_Africa();
+  process.process_Opinions_South_Africa();
+  process.process_Opinions_World();
 });

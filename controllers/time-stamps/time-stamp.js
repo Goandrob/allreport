@@ -7,7 +7,7 @@ module.exports.addTimeStamp = (articles)=>{
 
   let i=0;
 
-  while(articles[i]){
+  while(i < articles.length){
     articles[i]["timeAgo"] = moment(articles[i].createdAt).fromNow();
     i++;
   }

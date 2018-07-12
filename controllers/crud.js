@@ -97,14 +97,14 @@ module.exports.read = (headlines_type) => {
 module.exports.readForCache = async(headlines_type) =>{
 
 
-  var d = new Date();
-
-  var start = new moment(d);
-  start.startOf('day');
-
-
-  var finish = new moment(start);
-  finish.add(1, 'day');
+  //var d = new Date();
+  //
+  //var start = new moment(d);
+  //start.startOf('day');
+  //
+  //
+  //var finish = new moment(start);
+  //finish.add(1, 'day');
 
   let headlineCacheQuery = new Parse.Query(Headline);
   headlineCacheQuery.equalTo('type', headlines_type);
@@ -121,8 +121,8 @@ module.exports.readFromCache = async(item) =>{
 
   try{
     await storage.init({
-      dir: './.node-persist/storage',
-      forgiveParseErrors: true
+      //dir: './.node-persist/storage',
+      //forgiveParseErrors: true
     });
     return await storage.getItem(item);
   }

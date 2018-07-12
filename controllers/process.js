@@ -17,6 +17,7 @@ module.exports.process_Headlines_South_Africa = async () => {
 
   //Extract local headlines non-breaking
   let extractedHeadlines_South_Africa = await scrapePool.extractHeadlines_South_Africa();
+  extractedHeadlines_South_Africa = await adjuster.adjust_Headlines_South_Africa(extractedHeadlines_South_Africa);
 
   //Retrieve a record of today's headlines
   let allExistingItems = await getExistingItems(extractedHeadlines_South_Africa, "headlines_South_Africa");
@@ -74,52 +75,52 @@ module.exports.process_FactCheck_South_Africa = async() => {
   }
 };
 
-//module.exports.process_Opinions_South_Africa = async() => {
+module.exports.process_Opinions_South_Africa = async() => {
 
-const process_Opinions_South_Africa = async() => {
+//const process_Opinions_South_Africa = async() => {
 
   //Extract local headlines non-breaking
   let extractedOpinions_South_Africa = await scrapePool.extractOpinions_South_Africa();
   extractedOpinions_South_Africa = await adjuster.adjust_Opinions_South_Africa(extractedOpinions_South_Africa);
-  console.log(extractedOpinions_South_Africa);
+
 
   //Retrieve a record of today's headlines
-  //let allExistingItems = await getExistingItems(extractedOpinions_South_Africa,"opinions_South_Africa");
+  let allExistingItems = await getExistingItems(extractedOpinions_South_Africa,"opinions_South_Africa");
 
   //Save headlines that don't already exist in the parse db
-  //let status = await saveToDB(extractedOpinions_South_Africa, allExistingItems);
+  let status = await saveToDB(extractedOpinions_South_Africa, allExistingItems);
 
   //Retrieve 40 of the latest headines in the parse db
-  //let opinions_South_Africa = await crud.readForCache("opinions_South_Africa");
+  let opinions_South_Africa = await crud.readForCache("opinions_South_Africa");
+
 
   //Save to local machine cache
-  //if(opinions_South_Africa.length){
-  //saveToCache("opinions_South_Africa", opinions_South_Africa);
-  //}
+  if(opinions_South_Africa.length){
+  saveToCache("opinions_South_Africa", opinions_South_Africa);
+  }
 };
 
-//module.exports.process_Opinions_World = async() => {
+module.exports.process_Opinions_World = async() => {
 
-const process_Opinions_World = async() => {
+//const process_Opinions_World = async() => {
 
   //Extract local headlines non-breaking
   let extractedOpinions_World = await scrapePool.extractOpinions_World();
-  //extractedOpinions_World = await adjuster.adjust_Opinions_World(extractedOpinions_World);
-  console.log(extractedOpinions_World);
+  extractedOpinions_World = await adjuster.adjust_Opinions_World(extractedOpinions_World);
 
   //Retrieve a record of today's headlines
- // let allExistingItems = await getExistingItems(extractedOpinions_World, "opinions_World");
+  let allExistingItems = await getExistingItems(extractedOpinions_World, "opinions_World");
 
   //Save headlines that don't already exist in the parse db
-  //let status = await saveToDB(extractedOpinions_World, allExistingItems);
+  let status = await saveToDB(extractedOpinions_World, allExistingItems);
 
   //Retrieve 40 of the latest headines in the parse db
-  //et opinions_World = await crud.readForCache("opinions_World");
+  let opinions_World = await crud.readForCache("opinions_World");
 
   //Save to local machine cache
- // if (opinions_World.length) {
-   // saveToCache("opinions_World", opinions_World);
-  //}
+ if (opinions_World.length) {
+    saveToCache("opinions_World", opinions_World);
+  }
 };
 
 const getExistingItems = async (extracted, headlines_type)=> {
@@ -201,21 +202,10 @@ const saveToCache = async(field, item)=> {
 
 
   await storage.init({
-    dir: './.node-persist/storage',
+    //dir: './.node-persist/storage',
     forgiveParseErrors: true
   });
 
-  await storage.setItem(field, item);
-
+  let outcome =  await storage.setItem(field, item);
 
 };
-
-process_Opinions_World()
-
-
-
-
-
-
-
-

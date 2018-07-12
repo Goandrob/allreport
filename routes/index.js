@@ -40,7 +40,8 @@ router.get('/', (req, res) => {
         title: 'News',
         headlines_South_Africa: contentObj.headlines_South_Africa,
         headlines_World: contentObj.headlines_World,
-        factCheck_South_Africa: contentObj.factCheck_South_Africa
+        factCheck_South_Africa: contentObj.factCheck_South_Africa,
+        opinions: contentObj.opinions,
       })
     }
   });

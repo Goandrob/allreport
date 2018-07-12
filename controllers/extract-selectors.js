@@ -26,7 +26,6 @@ module.exports.extract = (selectorObj, data) => {
       if (selectorTitle) {
         title = $(this).children(selectorTitle).text();
       } else {
-        //console.log($(this).children('div').length);
         title = $(this).text();
       }
 
@@ -60,25 +59,6 @@ module.exports.extract = (selectorObj, data) => {
     }
 
   });
-
-  //$(selector).each(function() {
-  //
-  //  if(count < 10){
-  //    let title = $(this).text();
-  //
-  //
-  //    let href = $(this).children('a').attr("href");
-  //
-  //    let headline = {
-  //      title: title,
-  //      link: href
-  //    };
-  //
-  //    headlines.push(headline);
-  //    count++;
-  //  }
-  //
-  //});
 
   return headlines;
 };
